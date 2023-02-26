@@ -10,4 +10,3 @@ def commands():
 
 commands.add_command(config)
 commands.add_command(contests)
-

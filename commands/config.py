@@ -21,4 +21,3 @@ def config(dir: str):
         f.write(f"dir : {dir}")
 
     console.print("[bold green]Config set![/]\n" + f"dir: {dir}")
-

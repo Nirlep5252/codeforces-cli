@@ -1,6 +1,5 @@
 import click
 import requests
-import os
 from rich.console import Console
 from bs4 import BeautifulSoup
 from rich.table import Table
@@ -77,4 +76,3 @@ def contests(_id: str):
         # TODO: - list problems, with table just like browser
         #       - create folder in the default cf dir if config is set
         #       - also do sign in asodhaishud amogus
-
