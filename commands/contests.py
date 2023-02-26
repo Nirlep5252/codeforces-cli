@@ -38,6 +38,7 @@ def contests(_id: str):
         if not c:
             console.print("[bold red]An error occured.[/]")
             return
+        table.add_column("ID", justify="center")
         for col in c[0].find_all('th'):
             table.add_column(col.string, justify="center")
 
@@ -57,6 +58,7 @@ def contests(_id: str):
                 last += f"[{colors['gray']}]{tds[5].contents[5].span.string.strip()}[/]"
 
             table.add_row(
+                str(_id),
                 f"[link=https://codeforces.com/contests/{_id}]{tds[0].string.strip()}[/]",
                 "\n".join([format_writer(e) or "" for e in tds[1].find_all('a')]),
                 f"[blue link={tds[2].a['href']}]{start}[/]",
@@ -67,6 +69,12 @@ def contests(_id: str):
 
         console.print(table)
     else:
-        # TODO
-        pass
+        r = requests.get(f"https://codeforces.com/contest/{_id}")
+        if len(r.history) > 0:
+            console.print("[bold red]The contest has not started yet OR it doesn't exist.[/]")
+            return
+        soup = BeautifulSoup(r.text, "html.parser")
+        # TODO: - list problems, with table just like browser
+        #       - create folder in the default cf dir if config is set
+        #       - also do sign in asodhaishud amogus
 
