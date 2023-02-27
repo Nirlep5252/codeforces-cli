@@ -1,4 +1,5 @@
 import click
+import json
 import os
 from rich.console import Console
 
@@ -17,7 +18,12 @@ def config(dir: str):
         console.print(f"[bold red]ERROR: [/] Directory `{dir}` not found.")
         return
 
-    with open(os.path.expanduser('~') + ("/" if os.name == "posix" else "\\\\") + ".config/codeforces.uwu", "w") as f:
-        f.write(f"dir : {dir}")
+    data = {
+        "dir": dir
+    }
+
+    slash = "/" if os.name == "posix" else "\\\\"
+    with open(os.path.expanduser('~') + slash + "codeforces.uwu", "w") as f:
+        f.write(json.dumps(data))
 
     console.print("[bold green]Config set![/]\n" + f"dir: {dir}")
