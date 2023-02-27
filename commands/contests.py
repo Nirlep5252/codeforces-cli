@@ -30,10 +30,15 @@ def format_writer(writer) -> str:
 @click.argument("_id", default=0, required=False)
 def contests(_id: str):
     if _id == 0:
-        soup = BeautifulSoup(requests.get("https://codeforces.com/contests").text, "html.parser")
+        r = requests.get("https://codeforces.com/contests")
+        if r.status_code != 200:
+            console.print(f"[bold red]ERROR:[/] Status Code: {r.status_code}")
+            return
+
+        soup = BeautifulSoup(r.text, "html.parser")
         table = Table(title="Current or upcoming contests", show_lines=True)
 
-        c = soup.find_all('table')[0].find_all('tr')
+        c = soup.find('table').find_all('tr')
         if not c:
             console.print("[bold red]An error occured.[/]")
             return
@@ -66,13 +71,44 @@ def contests(_id: str):
                 last
             )
 
-        console.print(table)
+        console.print("\n\n", table)
+        console.print("[bold green]NOTE:[/] Use `cf contests ID` to view problems of an ongoing contest.\nAnd use `cf parse ID` to parse them.\n")
     else:
         r = requests.get(f"https://codeforces.com/contest/{_id}")
-        if len(r.history) > 0:
-            console.print("[bold red]The contest has not started yet OR it doesn't exist.[/]")
+        if r.status_code != 200:
+            console.print(f"[bold red]ERROR:[/] Status Code: {r.status_code}")
             return
+        if len(r.history) > 0:
+            console.print("[bold red]ERROR:[/] The contest has not started yet OR it doesn't exist.")
+            return
+
         soup = BeautifulSoup(r.text, "html.parser")
-        # TODO: - list problems, with table just like browser
-        #       - create folder in the default cf dir if config is set
-        #       - also do sign in asodhaishud amogus
+        p_tables = soup.find_all("table", {"class": "problems"})
+        if not p_tables:
+            console.print("[bold red]ERROR:[/] Unable to parse problems table.")
+            return
+
+        problems = p_tables[0].find_all('tr')[1:]
+        contest = soup.find_all("table", {"class": "rtable"})[0].find_all('tr')
+        contest_name = contest[0].th.a.string.strip()
+        contest_time = contest[1].td.span.string.strip()
+        table = Table(title=f"{contest_name} - {contest_time}", show_lines=True)
+
+        table.add_column("#", justify="center")
+        table.add_column("Name", justify="left")
+        table.add_column(" ", justify="center")
+        table.add_column(" ", justify="center")
+
+        for problem in problems:
+            items = problem.find_all('td')
+            problem_name = items[1].find('a').contents[1].strip()
+            problem_details = items[1].find('div', {'class': 'notice'}).contents
+            table.add_row(
+                items[0].a.string.strip(),
+                f"[link=https://codeforces.com/contest/{_id}/problem/{items[0].a.string.strip()}]{problem_name}[/]",
+                f"[{colors['gray']}]"+ problem_details[1].string.strip() + "\n" + problem_details[2].strip() + "[/]",
+                f"[blue link=https://codeforces.com/contest/{_id}/status/{items[0].a.string.strip()}]{items[3].a.contents[1].strip()}[/]"
+            )
+
+        console.print("\n\n", table)
+        console.print(f"\n[bold green]NOTE:[/] Use `cf parse {_id}` to parse all the problems and solve them from your terminal.\n\n")
