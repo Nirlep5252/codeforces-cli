@@ -30,7 +30,7 @@ def format_writer(writer) -> str:
 @click.argument("_id", default=0, required=False)
 def contests(_id: str):
     if _id == 0:
-        r = requests.get("https://codeforces.com/contests")
+        r = requests.get("https://codeforces.com/contests?complete=true")
         if r.status_code != 200:
             console.print(f"[bold red]ERROR:[/] Status Code: {r.status_code}")
             return
@@ -55,19 +55,20 @@ def contests(_id: str):
             last = tds[5].contents
 
             if len(last) == 3:
-                last = last[0].strip() + "\n[#9c9388]" + last[1].string.strip() + "[/]"
+                last = last[0].strip() + "\n[#9c9388]" + (last[1].string or last[1].contents[1]).strip() + "[/]"
             else:
                 last = f"[blue link=https://codeforces.com/contestRegistrants/{_id}]{last[3].contents[1].strip()}\n[/]"
                 last += "Until Closing\n"
                 last += f"[{colors['gray']}]{tds[5].contents[5].span.string.strip()}[/]"
 
+            print(tds[0])
             table.add_row(
                 str(_id),
-                f"[link=https://codeforces.com/contests/{_id}]{tds[0].string.strip()}[/]",
+                f"[link=https://codeforces.com/contests/{_id}]{(tds[0].string or tds[0].contents[0]).strip()}[/]",
                 "\n".join([format_writer(e) or "" for e in tds[1].find_all('a')]),
                 f"[blue link={tds[2].a['href']}]{start}[/]",
                 tds[3].string.strip(),
-                tds[4].contents[0].strip() + f"\n[{colors['gray']}]" + tds[4].span.string.strip() + "[/]",
+                (tds[4].contents[0].strip() or "Running") + f"\n[{colors['gray']}]" + tds[4].span.string.strip() + "[/]",
                 last
             )
 
