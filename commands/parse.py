@@ -4,6 +4,7 @@ import os
 import requests
 from rich.console import Console
 from bs4 import BeautifulSoup
+from utils import get_config
 
 console = Console()
 
@@ -34,7 +35,7 @@ def parse_problem(contest_id: int, problem: str, cf_dir: str, print_info: bool =
     final_outs = []
 
     for inp in inputs:
-        final_inps.append("\n".join(e.strip() if type(e) == str else e.string.strip() for e in inp.find('pre').contents if not (type(e) != str and e.string is None)))  # this line is very long but not as long as my di-
+        final_inps.append("\n".join(e.strip() if type(e) == str else e.string.strip() for e in inp.find('pre').contents if not (type(e) != str and e.string is None)))
 
     for out in outputs:
         final_outs.append("\n".join(e.strip() if type(e) == str else e.string.strip() for e in out.find('pre').contents if not (type(e) != str and e.string is None)))
@@ -60,16 +61,10 @@ def parse_problem(contest_id: int, problem: str, cf_dir: str, print_info: bool =
 @click.argument("contest_id", required=True)
 @click.argument("problem", default="_", required=False)
 def parse(contest_id: int, problem: str):
-    slash = "/" if os.name == "posix" else "\\\\"
-
-    config_path = os.path.expanduser("~") + slash + "codeforces.uwu"
-    if not os.path.isfile(config_path):
-        console.print("[bold red]ERROR: [/]Config file not found.\nPlease run `cf config`\n")
+    problem = problem.lower()
+    data = get_config(console)
+    if data is None:
         return
-
-    data = None
-    with open(os.path.expanduser("~") + slash + "codeforces.uwu", "r") as f:
-        data = json.loads("".join(f.readlines()))
 
     cf_dir = data.get("dir")
     if cf_dir is None:
@@ -95,7 +90,7 @@ def parse(contest_id: int, problem: str):
         problems = p_tables[0].find_all('tr')[1:]
         for i, p in enumerate(problems):
             items = p.find_all('td')
-            p_id = items[0].a.string.strip()
+            p_id = items[0].a.string.strip().lower()
             parse_problem(contest_id, p_id, cf_dir, print_info=(i == len(problems) - 1))
     else:
         parse_problem(contest_id, problem, cf_dir)
