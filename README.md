@@ -5,8 +5,8 @@ A simple command line tool to move your competitive programming workflow to your
 #### Current commands:
 
 `python main.py contests` - list all the current or upcoming contests \
-`python main.py contests {ID}` - view all the problems of an ongoing contest
-`python main.py parse {Contest ID} {Problem ID | Optional}` - parse the problem and its test cases \
+`python main.py contests {ID}` - view all the problems of an ongoing contest \
+`python main.py parse {Contest ID} {Problem ID | Optional}` - parse the problem and its test cases
 
 #### TODO commands:
 
