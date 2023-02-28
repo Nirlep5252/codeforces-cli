@@ -4,12 +4,20 @@ A simple command line tool to move your competitive programming workflow to your
 
 ### How to install?
 
+- Clone the repo
 ```
 $ git clone https://github.com/Nirlep5252/codeforces-cli
+```
+
+- Install it
+```
 $ cd ./codeforces-cli
 $ python3 -m build
 $ python3 -m pip install dist/codeforces-0.0.1-py3.none-any.whl --force-reinstall
+```
 
+- Happy coding!
+```
 $ cf --help
 ```
 
