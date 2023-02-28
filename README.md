@@ -31,6 +31,6 @@ $ cf --help
 
 #### TODO commands:
 
+`cf submit {FILE}` - submit the problem (requires config) (works based on current directory) \
 `cf standings {Contest ID | Optional}` - show all the standings of an ongoing of finished contests \
-`cf config` - save your username, password, problems-directory \
-`cf submit {FILE}` - submit the problem (requires config) (works based on current directory)
+`cf config` - save your username, password, problems-directory

@@ -10,7 +10,7 @@ console = Console()
 
 def parse_problem(contest_id: int, problem: str, cf_dir: str, print_info: bool = True):
     slash = "/" if os.name == "posix" else "\\\\"
-    r = requests.get(f"https://codeforces.com/contest/{contest_id}/problem/{problem}")
+    r = requests.get(url=f"https://codeforces.com/contest/{contest_id}/problem/{problem}")
     if len(r.history) > 0:
         console.print("[bold red]ERROR:[/] Contest or problem not found OR Contest has not started yet.")
         return
@@ -71,7 +71,7 @@ def parse(contest_id: int, problem: str):
         return
 
     if problem == "_":
-        r = requests.get(f"https://codeforces.com/contest/{contest_id}")
+        r = requests.get(url=f"https://codeforces.com/contest/{contest_id}")
         if len(r.history) > 0:
             console.print("[bold red]ERROR: [/]Contest has not started yet OR it doesn't exist.\n")
             return

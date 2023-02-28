@@ -38,7 +38,7 @@ def contests(_id: str):
         soup = BeautifulSoup(r.text, "html.parser")
         table = Table(title="Current or upcoming contests", show_lines=True)
 
-        c = soup.find('table').find_all('tr')
+        c = soup.find('table').find_all('tr')  # type: ignore
         if not c:
             console.print("[bold red]An error occured.[/]")
             return
