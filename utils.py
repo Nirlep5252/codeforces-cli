@@ -12,6 +12,10 @@ def get_config(console: Console) -> Optional[dict]:
         console.print("[bold red]ERROR: [/]Config file not found.\nPlease run `cf config`\n")
         return
 
+    if not os.path.isfile(config_path):
+        console.print("[bold red]ERROR: [/]Config file not found.\nPlease run `cf config`\n")
+        return
+
     data = None
     with open(os.path.expanduser("~") + slash + "codeforces.uwu", "r") as f:
         data = json.loads("".join(f.readlines()))

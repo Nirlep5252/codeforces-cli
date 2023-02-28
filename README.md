@@ -12,8 +12,9 @@ $ git clone https://github.com/Nirlep5252/codeforces-cli
 - Install it
 ```
 $ cd ./codeforces-cli
+$ python3 -m pip install build
 $ python3 -m build
-$ python3 -m pip install dist/codeforces-0.0.1-py3.none-any.whl --force-reinstall
+$ python3 -m pip install dist/codeforces-0.0.1-py3-none-any.whl --force-reinstall
 ```
 
 - Happy coding!
