@@ -107,7 +107,7 @@ def contests(_id: str):
             table.add_row(
                 items[0].a.string.strip(),
                 f"[link=https://codeforces.com/contest/{_id}/problem/{items[0].a.string.strip()}]{problem_name}[/]",
-                f"[{colors['gray']}]"+ problem_details[1].string.strip() + "\n" + problem_details[2].strip() + "[/]",
+                f"[{colors['gray']}]" + problem_details[1].string.strip() + "\n" + problem_details[2].strip() + "[/]",
                 f"[blue link=https://codeforces.com/contest/{_id}/status/{items[0].a.string.strip()}]{items[3].a.contents[1].strip()}[/]"
             )
 
