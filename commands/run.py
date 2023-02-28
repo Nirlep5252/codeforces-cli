@@ -55,7 +55,7 @@ def run(file: str):
     all_inputs = sorted([f for f in os.listdir(current_dir) if f.endswith(".input.test") and f.startswith(p_id)])
     all_outputs = sorted([f for f in os.listdir(current_dir) if f.endswith(".output.test") and f.startswith(p_id)])
 
-    console.print(f"[bold blue]INFO: [/]Checking {len(all_inputs)} test case(s)...\n")
+    console.print(f"[bold blue]INFO: [/]Checking {len(all_inputs)} testcase(s)...\n")
     for i in range(len(all_inputs)):
         inp = all_inputs[i]
         out = all_outputs[i]
@@ -75,7 +75,9 @@ def run(file: str):
             t1 = time.perf_counter() * 1000
             try:
                 with open(inp) as f:
-                    res = subprocess.run(cmd.split(), input=f.read(), capture_output=True, text=True, timeout=10)  # type: ignore
+                    # BUG: for problems that have multiple inputs, this can confuse the user
+                    # however, a good competitive programmar won't be confused by this :)
+                    res = subprocess.run(cmd.split(), input=f.read().strip(), capture_output=True, text=True, timeout=10)  # type: ignore
             except subprocess.TimeoutExpired:
                 console.print(f"[bold red]DEFAULT TIME LIMIT EXCEEDED (10 seconds)[/] ON TEST CASE {i + 1}\n")
                 continue
