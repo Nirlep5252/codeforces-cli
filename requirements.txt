@@ -2,4 +2,3 @@ click
 rich
 beautifulsoup4
 requests
-
