@@ -1,5 +1,4 @@
 import click
-import json
 import os
 import requests
 from rich.console import Console

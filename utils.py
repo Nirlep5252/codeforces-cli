@@ -17,7 +17,7 @@ def get_config(console: Console) -> Optional[dict]:
         return
 
     data = None
-    with open(os.path.expanduser("~") + slash + "codeforces.uwu", "r") as f:
+    with open(config_path, "r+") as f:
         data = json.loads("".join(f.readlines()))
 
     return data
