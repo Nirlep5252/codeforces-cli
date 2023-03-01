@@ -4,6 +4,12 @@ A simple command line tool to move your competitive programming workflow to your
 
 ### How to install?
 
+#### Install using pip
+```
+$ pip install -U codeforces
+```
+
+#### Install from source
 - Clone the repo
 ```
 $ git clone https://github.com/Nirlep5252/codeforces-cli
