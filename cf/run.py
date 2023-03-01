@@ -24,7 +24,7 @@ def run_cmd(ext: str, file: str) -> Optional[Union[str, List[str]]]:
 @click.command()
 @click.argument("file", required=True)
 def run(file: str):
-    slash = "/" if os.name == "posix" else "\\\\"
+    slash = "/" if os.name == "posix" else "\\"
 
     data = get_config(console)
     if data is None:
@@ -35,7 +35,9 @@ def run(file: str):
         console.print("[bold red]ERROR: [/]The default directory for parsing is not set.\nPlease run the `cf config` command.")
         return
 
+    cf_dir = os.path.abspath(cf_dir)
     current_dir = os.getcwd()
+    console.print(current_dir)
     if not current_dir.startswith(cf_dir) and current_dir != cf_dir:
         console.print("[bold red]ERROR: [/]The current directory is not a contest directory.\n")
         return

@@ -3,3 +3,5 @@ __pycache__
 dist/
 codeforces.egg-info
 main.py
+testing.py
+testing
