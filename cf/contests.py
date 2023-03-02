@@ -29,6 +29,9 @@ def format_writer(writer) -> str:
 @click.command()
 @click.argument("_id", default=0, required=False)
 def contests(_id: str):
+    """
+    Get the list of current or upcoming contests.
+    """
     if _id == 0:
         r = requests.get("https://codeforces.com/contests?complete=true")
         if r.status_code != 200:

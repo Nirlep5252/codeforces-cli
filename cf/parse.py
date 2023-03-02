@@ -60,6 +60,9 @@ def parse_problem(contest_id: int, problem: str, cf_dir: str, print_info: bool =
 @click.argument("contest_id", required=True)
 @click.argument("problem", default="_", required=False)
 def parse(contest_id: int, problem: str):
+    """
+    Parse the sample test cases for a problem OR a contest.
+    """
     problem = problem.lower()
     data = get_config(console)
     if data is None:

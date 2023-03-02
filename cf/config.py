@@ -12,6 +12,9 @@ console = Console()
 @click.option("--cf_dir", prompt="Enter your codeforces directory")
 # def config(username: str, password: str, dir: str):
 def config(cf_dir: str):
+    """
+    Configure the codeforces cli.
+    """
     if cf_dir.startswith("~"):
         cf_dir = os.path.expanduser('~') + cf_dir[1:]
     if not os.path.isdir(cf_dir):

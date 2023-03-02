@@ -24,6 +24,9 @@ def run_cmd(ext: str, file: str) -> Optional[Union[str, List[str]]]:
 @click.command()
 @click.argument("file", required=True)
 def run(file: str):
+    """
+    Check the sample test cases for a problem.
+    """
     slash = "/" if os.name == "posix" else "\\"
 
     data = get_config(console)
