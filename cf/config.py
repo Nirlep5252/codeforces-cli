@@ -1,9 +1,8 @@
 import click
 import json
 import os
-import requests
-from bs4 import BeautifulSoup
 from rich.console import Console
+from utils import CFClient
 
 console = Console()
 
@@ -17,30 +16,10 @@ def config(username: str, password: str, cf_dir: str):
     Configure the codeforces cli.
     """
 
-    r1 = requests.get("https://codeforces.com/enter")
-    s1 = BeautifulSoup(r1.text, "html.parser")
-    csrf_token: str = s1.find_all("span", {"class": "csrf-token"})[0]["data-csrf"]  # type: ignore
-    console.log(csrf_token)
-
-    r2 = requests.post("https://codeforces.com/enter", data={
-        "csrf_token": csrf_token,
-        "action": "enter",
-        "handleOrEmail": username,
-        "password": password,
-    }, headers={
-        "X-Csrf-Token": csrf_token
-    }, allow_redirects=True)
-    s2 = BeautifulSoup(r2.text, "html.parser")
-
-    with open("testing.html", "w") as f:
-        f.write(r2.text)
-
-    usr = s2.find_all("div", {"class": "lang-chooser"})[0].find_all('a')  # type: ignore
-    if usr[-1].string.strip() == "Register":
-        console.print("[bold red]ERROR: [/] Login failed, you may have entered incorrect username/password.")
+    client = CFClient(username, password)
+    if not client.login():
+        console.print("[bold red]ERROR: [/]Invalid username or password.")
         return
-
-    console.log(r2.cookies, r2.headers)
 
     if cf_dir.startswith("~"):
         cf_dir = os.path.expanduser('~') + cf_dir[1:]
@@ -59,4 +38,5 @@ def config(username: str, password: str, cf_dir: str):
     with open(os.path.expanduser('~') + slash + "codeforces.uwu", "w") as f:
         f.write(json.dumps(data))
 
-    console.print("[bold green]Config set![/]\n" + f"dir: {cf_dir}")
+    console.print("\n[bold green]Config set![/]\n" + f"dir: {cf_dir}")
+    console.print(f"\nHappy Coding! {username}")

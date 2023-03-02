@@ -1,8 +1,9 @@
 import click
-import requests
-from rich.console import Console
 from bs4 import BeautifulSoup
 from rich.table import Table
+from rich.console import Console
+from rich.style import Style
+from utils import CFClient, get_config
 
 console = Console()
 
@@ -32,8 +33,19 @@ def contests(_id: str):
     """
     Get the list of current or upcoming contests.
     """
+    config = get_config(console)
+    if config is None:
+        return
+    if "username" not in config or "password" not in config:
+        console.print("[bold red]ERROR: [/]Username and password not set. Please use `cf config`.\n")
+        return
+
+    client = CFClient(config['username'], config['password'])
+    client.login()
+
     if _id == 0:
-        r = requests.get("https://codeforces.com/contests?complete=true")
+        console.log("Fetching contest details...")
+        r = client.session.get("https://codeforces.com/contests?complete=true")
         if r.status_code != 200:
             console.print(f"[bold red]ERROR:[/] Status Code: {r.status_code}")
             return
@@ -41,7 +53,7 @@ def contests(_id: str):
         soup = BeautifulSoup(r.text, "html.parser")
         table = Table(title="Current or upcoming contests", show_lines=True)
 
-        c = soup.find('table').find_all('tr')  # type: ignore
+        c = soup.find('div', {'class': 'contestList'}).find('table').find_all('tr')  # type: ignore
         if not c:
             console.print("[bold red]An error occured.[/]")
             return
@@ -78,7 +90,8 @@ def contests(_id: str):
         console.print("\n\n", table)
         console.print("[bold green]NOTE:[/] Use `cf contests ID` to view problems of an ongoing contest.\nAnd use `cf parse ID` to parse them.\n")
     else:
-        r = requests.get(f"https://codeforces.com/contest/{_id}")
+        console.log("Fetching contest details...")
+        r = client.session.get(f"https://codeforces.com/contest/{_id}")
         if r.status_code != 200:
             console.print(f"[bold red]ERROR:[/] Status Code: {r.status_code}")
             return
@@ -104,6 +117,11 @@ def contests(_id: str):
         table.add_column(" ", justify="center")
 
         for problem in problems:
+            kwargs = {}
+            if "accepted-problem" in (problem.get('class') or []):
+                kwargs['style'] = Style(bgcolor="#00ff00", color="#000000")
+            elif "rejected-problem" in (problem.get('class') or []):
+                kwargs['style'] = Style(bgcolor="red", color="#000000")
             items = problem.find_all('td')
             problem_name = items[1].find('a').contents[1].strip()
             problem_details = items[1].find('div', {'class': 'notice'}).contents
@@ -111,7 +129,8 @@ def contests(_id: str):
                 items[0].a.string.strip(),
                 f"[link=https://codeforces.com/contest/{_id}/problem/{items[0].a.string.strip()}]{problem_name}[/]",
                 f"[{colors['gray']}]" + problem_details[1].string.strip() + "\n" + problem_details[2].strip() + "[/]",
-                f"[blue link=https://codeforces.com/contest/{_id}/status/{items[0].a.string.strip()}]{items[3].a.contents[1].strip()}[/]"
+                f"[blue link=https://codeforces.com/contest/{_id}/status/{items[0].a.string.strip()}]{items[3].a.contents[1].strip()}[/]",
+                **kwargs
             )
 
         console.print("\n\n", table)

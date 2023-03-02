@@ -1,5 +1,4 @@
 import click
-import requests
 import os
 from utils import get_config, CFClient
 from rich.console import Console
@@ -8,7 +7,9 @@ console = Console()
 
 
 lang_ids = {
-    "py": "70"
+    "py": "70",
+    "c": "43",
+    "cpp": "73"
 }
 
 
@@ -60,11 +61,10 @@ def submit(file: str):
         console.print("[bold red]ERROR: [/]Unable to login")
         return
 
-    # get CSRF token, RCPC something and all other shit using username, pass
     url = f"https://codeforces.com/contest/{c_id}/submit"
     csrf = clnt.get_csrf(url)
     url += f"?csrf_token={csrf}"
-    resp = clnt.client.post(url=url, allow_redirects=True, data={
+    resp = clnt.session.post(url=url, allow_redirects=True, data={
         "csrf_token": csrf,
         "ftaa": "",
         "bfaa": "",
@@ -76,11 +76,10 @@ def submit(file: str):
         "tabSize": "4",
         "sourceCodeConfirmed": "true",
     })
-    if resp.url == "https://codeforces.com/":
+    if not resp.url.startswith(f"https://codeforces.com/contest/{c_id}/my"):
         console.print("[bold red]ERROR: [/] Submission failed.")
         return
 
-    console.print("Submitted. Watching solution... [TODO]")
+    console.print(f"Submitted. idk whether it was accepted or not (work in progress >.<)\ncheck it yourself [link={resp.url}]{resp.url}[/]")
 
-    console.log(resp.url)
-    console.print(resp.history, resp)
+    # TODO: pubsub stuff

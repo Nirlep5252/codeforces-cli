@@ -28,11 +28,11 @@ class RichGroup(click.Group):
 
         table = Table(show_header=True, header_style="bold green", show_lines=True)
         table.add_column("Command", style="bright", justify="left")
-        table.add_column("Description", style="dim")
+        table.add_column("Description")
 
         for name, cmd in cmds.items():
             table.add_row(
-                f"{name} {' '.join(['{' + e.name + '}' for e in cmd.params])}",  # type: ignore
+                f"{name} {' '.join(['[dim]{' + e.name + '}[/]' for e in cmd.params])}",  # type: ignore
                 cmd.help.strip()  # type: ignore
             )
 

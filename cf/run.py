@@ -40,7 +40,6 @@ def run(file: str):
 
     cf_dir = os.path.abspath(cf_dir)
     current_dir = os.getcwd()
-    console.print(current_dir)
     if not current_dir.startswith(cf_dir) and current_dir != cf_dir:
         console.print("[bold red]ERROR: [/]The current directory is not a contest directory.\n")
         return
@@ -59,6 +58,8 @@ def run(file: str):
 
     all_inputs = sorted([f for f in os.listdir(current_dir) if f.endswith(".input.test") and f.startswith(p_id)])
     all_outputs = sorted([f for f in os.listdir(current_dir) if f.endswith(".output.test") and f.startswith(p_id)])
+
+    total_passed = 0
 
     console.print(f"[bold blue]INFO: [/]Checking {len(all_inputs)} testcase(s)...\n")
     for i in range(len(all_inputs)):
@@ -94,7 +95,12 @@ def run(file: str):
 
             with open(out) as f:
                 if res.stdout.strip() == f.read().strip():
-                    console.print(f"[bold green]PASSED[/] ON TEST CASE {i + 1}: {t2 - t1}ms\n")
+                    console.print(f"[bold green]PASSED[/] ON TEST CASE {i + 1}: {t2 - t1:.2f}ms\n")
+                    total_passed += 1
                 else:
                     console.print(f"[bold red]FAILED[/] ON TEST CASE {i + 1}\n")
                     console.print(f"\nYour Output:\n{res.stdout.strip()}\n\nExpected Output:\n{open(out).read().strip()}\n")
+
+    console.print(f"[bold blue]INFO: [/]Passed {total_passed}/{len(all_inputs)} testcases.\n")
+    if total_passed == len(all_inputs):
+        console.print("[bold green]SUCCESS: [/]All testcases passed!\nYou can submit using the `cf submit` command.\n")

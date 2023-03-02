@@ -29,12 +29,14 @@ class CFClient:
     def __init__(self, username: str, password: str):
         self.username = username
         self.password = password
-        self.client = requests.Session()
+        self.session = requests.Session()
+        self.console = Console()
 
     def login(self) -> bool:
+        self.console.log("Logging in...")
         csrf_token = self.get_csrf("https://codeforces.com/enter")
 
-        r2 = self.client.post("https://codeforces.com/enter", data={
+        r2 = self.session.post("https://codeforces.com/enter", data={
             "csrf_token": csrf_token,
             "action": "enter",
             "handleOrEmail": self.username,
@@ -51,6 +53,6 @@ class CFClient:
         return True
 
     def get_csrf(self, url) -> str:
-        r = self.client.get(url)
+        r = self.session.get(url)
         s = BeautifulSoup(r.text, "html.parser")
         return s.find_all("span", {"class": "csrf-token"})[0]["data-csrf"]
