@@ -9,7 +9,18 @@ console = Console()
 lang_ids = {
     "py": "70",
     "c": "43",
-    "cpp": "73"
+    "cpp": "73",
+    "cs": "79",  # C#
+    "d": "28",  # D
+    "go": "32",  # Golang
+    "hs": "12",  # Haskell
+    "java": "74",
+    "kt": "83",  # Kotlin
+    "ml": "19",  # Ocaml
+    "php": "6",
+    "rb": "67",  # Ruby
+    "rs": "75",  # Rust
+    "js": "55",  # Nodejs
 }
 
 
