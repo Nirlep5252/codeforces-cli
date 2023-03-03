@@ -1,4 +1,4 @@
-## Codeforces CLI [WORK IN PROGRESS]
+# Codeforces CLI [WORK IN PROGRESS]
 
 A simple command line tool to move your competitive programming workflow to your terminal.
 
@@ -45,7 +45,6 @@ $ cf --help
 
 #### TODO features:
 
-- [ ] Support all languages in run and submit
-- [ ] Watch submission status in real time
+- [ ] Support all languages in run
 - [ ] Add a templating system
 - [ ] A problem recommendation system, maybe?

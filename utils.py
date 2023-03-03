@@ -50,6 +50,7 @@ class CFClient:
         if usr[-1].string.strip() == "Register":
             return False
 
+        self.console.log("Logged in")
         return True
 
     def get_csrf(self, url) -> str:
