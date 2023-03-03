@@ -3,12 +3,12 @@ import os
 import requests
 from rich.console import Console
 from bs4 import BeautifulSoup
-from utils import get_config
+from utils import get_config, get_bp
 
 console = Console()
 
 
-def parse_problem(contest_id: int, problem: str, cf_dir: str, print_info: bool = True):
+def parse_problem(contest_id: int, problem: str, cf_dir: str, print_info: bool = True, bp: str = "_"):
     slash = "/" if os.name == "posix" else "\\\\"
     r = requests.get(url=f"https://codeforces.com/contest/{contest_id}/problem/{problem}")
     if len(r.history) > 0:
@@ -50,6 +50,15 @@ def parse_problem(contest_id: int, problem: str, cf_dir: str, print_info: bool =
         with open(f"{contest_dir}{slash}{problem}.{i}.output.test", "w") as f:
             f.write(out)
 
+    if bp != "_":
+        bp_text = get_bp(bp)
+        if bp_text is None:
+            console.print(f"[bold red]ERROR: [/]No boilerplate file found for `{bp}`.")
+        else:
+            with open(f"{contest_dir}{slash}{problem}.{bp}", "w") as f:
+                f.write(bp_text)
+                console.print(f"[bold green]INFO: [/]Created boilerplate `{problem}.{bp}` file.")
+
     console.print(f"[bold green]Problem {contest_id} {problem} parsed successfully.[/]\n")
     if print_info:
         console.print(f"Use `cd {contest_dir}` to move the contest directory.")
@@ -59,7 +68,8 @@ def parse_problem(contest_id: int, problem: str, cf_dir: str, print_info: bool =
 @click.command()
 @click.argument("contest_id", required=True)
 @click.argument("problem", default="_", required=False)
-def parse(contest_id: int, problem: str):
+@click.option("--lang", required=False, default="_")
+def parse(contest_id: int, problem: str, lang: str):
     """
     Parse the sample test cases for a problem OR a contest.
     """
@@ -93,6 +103,6 @@ def parse(contest_id: int, problem: str):
         for i, p in enumerate(problems):
             items = p.find_all('td')
             p_id = items[0].a.string.strip().lower()
-            parse_problem(contest_id, p_id, cf_dir, print_info=(i == len(problems) - 1))
+            parse_problem(contest_id, p_id, cf_dir, print_info=(i == len(problems) - 1), bp=lang)
     else:
-        parse_problem(contest_id, problem, cf_dir)
+        parse_problem(contest_id, problem, cf_dir, bp=lang)

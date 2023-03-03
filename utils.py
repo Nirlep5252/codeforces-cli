@@ -25,6 +25,19 @@ def get_config(console: Console) -> Optional[dict]:
     return data
 
 
+def get_bp(lang: str) -> Optional[str]:
+    slash = "/" if os.name == "posix" else "\\\\"
+    bp_dir = os.path.expanduser("~") + slash + "cf_boilerplates"
+
+    if not os.path.isdir(bp_dir):
+        return
+    if not os.path.isfile(bp_dir + slash + "template." + lang):
+        return
+
+    with open(bp_dir + slash + "template." + lang, "r") as f:
+        return f.read()
+
+
 class CFClient:
     def __init__(self, username: str, password: str):
         self.username = username

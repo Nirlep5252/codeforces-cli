@@ -6,7 +6,6 @@ from utils import get_config, CFClient
 from bs4 import BeautifulSoup
 from rich.console import Console
 from rich.live import Live
-from rich.text import Text
 
 console = Console()
 
