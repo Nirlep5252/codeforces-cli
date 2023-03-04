@@ -127,8 +127,8 @@ Memory:     [bold white]{sub_mem.strip()}[/]
         sub_data = json.loads(sub['text'])['d']
         live_sub_id = sub_data[1]
         if live_sub_id == sub_id:
-            status = sub_data[6]
-            test_case = sub_data[8]
+            status = sub_data[6].strip()
+            test_case = sub_data[8].strip()
 
             if status == "OK":
                 status_text = "[bold green]ACCEPTED[/]"
@@ -148,4 +148,5 @@ Memory:     [bold]{memory} KB[/]
             live.refresh()
             if status != "TESTING":
                 live.stop()
+                sub_watcher.close()
                 break
