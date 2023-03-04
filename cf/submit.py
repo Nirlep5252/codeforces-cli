@@ -132,12 +132,10 @@ Memory:     [bold white]{sub_mem.strip()}[/]
 
             if status == "OK":
                 status_text = "[bold green]ACCEPTED[/]"
-            elif status in ("WRONG_ANSWER", "COMPILATION_ERROR", "RUNTIME_ERROR", "TIME_LIMIT_EXCEEDED", "MEMORY_LIMIT_EXCEEDED", "IDLENESS_LIMIT_EXCEEDED", "SECURITY_VIOLATED", "CRASHED", "INPUT_PREPARATION_CRASHED", "CHALLENGED", "SKIPPED", "PARTIAL", "REJECTED"):
-                status_text = f"[bold red]{' '.join(status.split('_'))}[/] on test case: {test_case}"
             elif status == "TESTING":
                 status_text = f"[bold]Running on test case: {test_case}[/]"
             else:
-                status_text = status
+                status_text = f"[bold red]{' '.join(status.split('_'))}[/] on test case: {test_case}"
 
             timee = sub_data[9]
             memory = int(sub_data[10]) // 1000
