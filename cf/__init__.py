@@ -5,6 +5,7 @@ from .parse import parse
 from .submit import submit
 from .run import run
 from .unsolved import unsolved
+from .edit import edit_cmd
 from rich.console import Console
 from rich.table import Table
 from typing import Dict
@@ -51,3 +52,4 @@ commands.add_command(parse)
 commands.add_command(run)
 commands.add_command(submit)
 commands.add_command(unsolved)
+commands.add_command(edit_cmd)
