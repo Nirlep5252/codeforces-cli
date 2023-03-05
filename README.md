@@ -37,7 +37,8 @@ $ cf --help
 `cf parse {Contest ID} {Problem ID | Optional} {--lang | Optional}` - parse the problem and its test cases \
 `cf run {FILE}` - check the test cases for the current problem (works based on current directory) \
 `cf submit {FILE}` - submit the problem (requires config) (works based on current directory) \
-`cf unsolved` - return the list of all your unsolved problems
+`cf unsolved` - return the list of all your unsolved problems \
+`cf edit {CONTEST ID}` - open the contest folder in the editor of choice (only 3 supported so far)
 
 #### TODO commands:
 
