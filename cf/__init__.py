@@ -35,7 +35,7 @@ class RichGroup(click.Group):
         for name, cmd in cmds.items():
             table.add_row(
                 f"{name} {' '.join(['[dim]{' + e.name + '}[/]' for e in cmd.params])}",  # type: ignore
-                cmd.help.strip()  # type: ignore
+                (cmd.help or "No Description").strip()  # type: ignore
             )
 
         console.print(table)

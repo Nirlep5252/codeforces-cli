@@ -17,6 +17,9 @@ editor_cmds = {
 @click.argument("contest_id", required=True)
 @click.option("--editor", type=click.Choice(["vscode", "neovim", "vim"]), prompt="Select an editor: ")
 def edit_cmd(contest_id: str, editor: str):
+    """
+    Open a contest directory in an editor. (3 supported)
+    """
     conf = get_config(console)
     if conf is None:
         return
