@@ -1,4 +1,5 @@
 import click
+import time
 import json
 import websocket
 import os
@@ -116,8 +117,18 @@ Time:       [bold white]{sub_time.strip()}[/]
 Memory:     [bold white]{sub_mem.strip()}[/]
                     """
 
+    pc = None
+    cc = None
+    metas = soup.find_all('meta')
+
+    for meta in metas:
+        if meta.get('name') == 'pc':
+            pc = meta.get('content')
+        elif meta.get('name') == 'cc':
+            cc = meta.get('content')
+
     sub_watcher = websocket.WebSocket()
-    sub_watcher.connect("wss://pubsub.codeforces.com/ws/s_1988fd413d914791b025375d6bc48e62dcbb55e5/s_8299e18de2d40feb5075aa02ebb9ec5934e87d77?_=1677814224990")
+    sub_watcher.connect(f"wss://pubsub.codeforces.com/ws/s_{pc}/s_{cc}?_={int(time.time())}")
 
     live = Live(live_text, console=console)
     live.start()
