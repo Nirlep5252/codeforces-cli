@@ -2,11 +2,13 @@
 
 A simple command line tool to move your competitive programming workflow to your terminal.
 
+![image](https://i.imgur.com/ZpLElvF.gif)
+
 ### How to install?
 
 #### 1. Install using pip
 ```
-$ pip install -U codeforces
+$ pip install -U codeforces==0.1.1a0
 $ cf --help
 ```
 
