@@ -8,7 +8,7 @@ A simple command line tool to move your competitive programming workflow to your
 
 #### 1. Install using pip
 ```
-$ pip install -U codeforces==0.1.1a0
+$ pip install -U codeforces
 $ cf --help
 ```
 
