@@ -76,7 +76,6 @@ def contests(_id: str):
                 last += "Until Closing\n"
                 last += f"[{colors['gray']}]{tds[5].contents[5].span.string.strip()}[/]"
 
-            print(tds[0])
             table.add_row(
                 str(_id),
                 f"[link=https://codeforces.com/contests/{_id}]{(tds[0].string or tds[0].contents[0]).strip()}[/]",
