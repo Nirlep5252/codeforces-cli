@@ -16,7 +16,8 @@ colors = {
     "blue": "#254b8c",
     "admin": "#ffffff",
     "cyan": "#57fcf2",
-    "green": "#72ff72"
+    "green": "#72ff72",
+    "black": "#000000"
 }
 
 
