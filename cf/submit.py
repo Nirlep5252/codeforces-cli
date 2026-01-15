@@ -80,6 +80,8 @@ def submit(file: str):
     url = f"https://codeforces.com/contest/{c_id}/submit"
     csrf = clnt.get_csrf(url)
     url += f"?csrf_token={csrf}"
+    with open(file, "r") as f:
+        source_code = f.read()
     resp = clnt.session.post(url=url, allow_redirects=True, data={
         "csrf_token": csrf,
         "ftaa": "",
@@ -88,7 +90,7 @@ def submit(file: str):
         "submittedProblemIndex": p_id,
         "programTypeId": lang_ids[p_ext],
         "contestId": c_id,
-        "source": open(file, "r").read(),
+        "source": source_code,
         "tabSize": "4",
         "sourceCodeConfirmed": "true",
     })

@@ -32,8 +32,8 @@ def config(username: str, cf_dir: str):
         "username": username,
     }
 
-    slash = "/" if os.name == "posix" else "\\\\"
-    with open(os.path.expanduser('~') + slash + "codeforces.uwu", "w") as f:
+    config_path = os.path.join(os.path.expanduser('~'), "codeforces.uwu")
+    with open(config_path, "w") as f:
         f.write(json.dumps(data))
 
     console.print("\n[bold green]Config set![/]\n" + f"dir: {cf_dir}")

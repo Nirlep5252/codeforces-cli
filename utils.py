@@ -7,9 +7,7 @@ from rich.console import Console
 
 
 def get_config(console: Console) -> Optional[dict]:
-    slash = "/" if os.name == "posix" else "\\\\"
-
-    config_path = os.path.expanduser("~") + slash + "codeforces.uwu"
+    config_path = os.path.join(os.path.expanduser("~"), "codeforces.uwu")
     if not config_path:
         console.print("[bold red]ERROR: [/]Config file not found.\nPlease run `cf config`\n")
         return
@@ -26,15 +24,15 @@ def get_config(console: Console) -> Optional[dict]:
 
 
 def get_bp(lang: str) -> Optional[str]:
-    slash = "/" if os.name == "posix" else "\\\\"
-    bp_dir = os.path.expanduser("~") + slash + "cf_boilerplates"
+    bp_dir = os.path.join(os.path.expanduser("~"), "cf_boilerplates")
 
     if not os.path.isdir(bp_dir):
         return
-    if not os.path.isfile(bp_dir + slash + "template." + lang):
+    template_path = os.path.join(bp_dir, "template." + lang)
+    if not os.path.isfile(template_path):
         return
 
-    with open(bp_dir + slash + "template." + lang, "r") as f:
+    with open(template_path, "r") as f:
         return f.read()
 
 
@@ -120,15 +118,13 @@ class CFClient:
 
     def _save_cookies(self, cookies: list) -> None:
         """Save cookies to config for future authenticated requests."""
-        slash = "/" if os.name == "posix" else "\\\\"
-        cookie_path = os.path.expanduser("~") + slash + "codeforces.cookies"
+        cookie_path = os.path.join(os.path.expanduser("~"), "codeforces.cookies")
         with open(cookie_path, "w") as f:
             json.dump(cookies, f)
 
     def _load_cookies(self) -> bool:
         """Load saved cookies into the session. Returns True if cookies were loaded."""
-        slash = "/" if os.name == "posix" else "\\\\"
-        cookie_path = os.path.expanduser("~") + slash + "codeforces.cookies"
+        cookie_path = os.path.join(os.path.expanduser("~"), "codeforces.cookies")
 
         if not os.path.isfile(cookie_path):
             return False
