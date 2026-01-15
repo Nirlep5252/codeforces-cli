@@ -102,6 +102,8 @@ class CFClient:
         except Exception as e:
             self.console.print(f"[bold red]ERROR:[/] Login failed.")
             self.console.print(f"[dim]Details: {e}[/dim]")
+            if 'driver' in locals():
+                driver.quit()
             return False
 
     def _verify_login(self) -> bool:
