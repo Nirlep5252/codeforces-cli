@@ -1,16 +1,26 @@
 import click
 import os
-import requests
 from rich.console import Console
 from bs4 import BeautifulSoup
-from utils import get_config, get_bp
+from utils import get_config, get_bp, CFClient
 
 console = Console()
 
+# Global client to be initialized once
+_client = None
 
-def parse_problem(contest_id: int, problem: str, cf_dir: str, print_info: bool = True, bp: str = "_"):
+
+def get_client(username: str) -> CFClient:
+    global _client
+    if _client is None:
+        _client = CFClient(username)
+        _client.login()
+    return _client
+
+
+def parse_problem(contest_id: int, problem: str, cf_dir: str, client: CFClient, print_info: bool = True, bp: str = "_"):
     slash = "/" if os.name == "posix" else "\\\\"
-    r = requests.get(url=f"https://codeforces.com/contest/{contest_id}/problem/{problem}")
+    r = client.session.get(url=f"https://codeforces.com/contest/{contest_id}/problem/{problem}")
     if len(r.history) > 0:
         console.print("[bold red]ERROR:[/] Contest or problem not found OR Contest has not started yet.")
         return
@@ -83,8 +93,14 @@ def parse(contest_id: int, problem: str, lang: str):
         console.print("[bold red]ERROR: [/]The default directory for parsing is not set.\nPlease run the `cf config` command.")
         return
 
+    if "username" not in data:
+        console.print("[bold red]ERROR: [/]Username not set. Please use `cf config`.\n")
+        return
+
+    client = get_client(data["username"])
+
     if problem == "_":
-        r = requests.get(url=f"https://codeforces.com/contest/{contest_id}")
+        r = client.session.get(url=f"https://codeforces.com/contest/{contest_id}")
         if len(r.history) > 0:
             console.print("[bold red]ERROR: [/]Contest has not started yet OR it doesn't exist.\n")
             return
@@ -103,6 +119,6 @@ def parse(contest_id: int, problem: str, lang: str):
         for i, p in enumerate(problems):
             items = p.find_all('td')
             p_id = items[0].a.string.strip().lower()
-            parse_problem(contest_id, p_id, cf_dir, print_info=(i == len(problems) - 1), bp=lang)
+            parse_problem(contest_id, p_id, cf_dir, client, print_info=(i == len(problems) - 1), bp=lang)
     else:
-        parse_problem(contest_id, problem, cf_dir, bp=lang)
+        parse_problem(contest_id, problem, cf_dir, client, bp=lang)

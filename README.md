@@ -13,21 +13,22 @@ $ cf --help
 ```
 
 #### 2. Install from source (using uv)
-- Clone the repo
 ```
 $ git clone https://github.com/Nirlep5252/codeforces-cli
-```
-
-- Install with uv
-```
 $ cd ./codeforces-cli
 $ uv sync
 $ uv run cf --help
 ```
 
+**Note:** Chrome browser is required for authentication.
+
+#### Authentication Note
+
+Due to Cloudflare protection on Codeforces, authentication requires opening a browser window once. When you run `cf config` or first use `cf submit`, a browser will open for you to login. After successful login, your session is saved and subsequent commands will work without opening the browser again (until the session expires).
+
 #### Current commands:
 
-`cf config` - save your username, password, problems-directory \
+`cf config` - save your username and problems-directory (opens browser for login) \
 `cf contests` - list all the current or upcoming contests \
 `cf contests {ID}` - view all the problems of an ongoing contest \
 `cf parse {Contest ID} {Problem ID | Optional} {--lang | Optional}` - parse the problem and its test cases \

@@ -37,11 +37,11 @@ def contests(_id: str):
     config = get_config(console)
     if config is None:
         return
-    if "username" not in config or "password" not in config:
-        console.print("[bold red]ERROR: [/]Username and password not set. Please use `cf config`.\n")
+    if "username" not in config:
+        console.print("[bold red]ERROR: [/]Username not set. Please use `cf config`.\n")
         return
 
-    client = CFClient(config['username'], config['password'])
+    client = CFClient(config['username'])
     client.login()
 
     if _id == 0:

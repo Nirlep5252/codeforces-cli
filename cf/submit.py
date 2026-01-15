@@ -68,11 +68,11 @@ def submit(file: str):
         console.print("[bold red]ERROR: [/]The file extension is not supported.\n")
         return
 
-    if "username" not in data or "password" not in data:
-        console.print("[bold red]ERROR: [/]Username and password not set. Please use `cf config`.\n")
+    if "username" not in data:
+        console.print("[bold red]ERROR: [/]Username not set. Please use `cf config`.\n")
         return
 
-    clnt = CFClient(data['username'], data['password'])
+    clnt = CFClient(data['username'])
     if not clnt.login():
         console.print("[bold red]ERROR: [/]Unable to login")
         return

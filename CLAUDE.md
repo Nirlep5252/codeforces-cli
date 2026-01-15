@@ -42,7 +42,21 @@ There are no tests in this project.
 - `get_bp(lang)` - Load boilerplate templates from `~/cf_boilerplates/template.{lang}`
 - `CFClient` - HTTP session handler with login and CSRF token management
 
-**Key Dependencies**: Click (CLI), Rich (terminal UI), BeautifulSoup4 (HTML parsing), requests (HTTP), websocket-client (real-time updates)
+**Key Dependencies**: Click (CLI), Rich (terminal UI), BeautifulSoup4 (HTML parsing), requests (HTTP), websocket-client (real-time updates), undetected-chromedriver (browser automation for authentication)
+
+**Config Files**:
+- `~/.codeforces.uwu` - Username and directory settings (JSON)
+- `~/.codeforces.cookies` - Saved session cookies for authenticated requests (JSON)
+
+## Authentication
+
+Codeforces uses Cloudflare protection which blocks automated browsers. We use `undetected-chromedriver` to bypass this. The authentication flow is:
+1. On first login (via `cf config` or `cf submit`), Chrome opens for user to login manually
+2. After successful login, cookies are saved to `~/.codeforces.cookies`
+3. Subsequent requests reuse saved cookies (no browser needed)
+4. If cookies expire, browser opens again for re-authentication
+
+The `CFClient` class in `utils.py` handles this with `login()`, `_verify_login()`, `_save_cookies()`, and `_load_cookies()` methods. Password is not stored - only username and cookies.
 
 ## Code Patterns
 

@@ -14,11 +14,11 @@ def unsolved():
     if conf is None:
         return
 
-    if "username" not in conf and "password" not in conf:
-        console.print("[bold red]ERROR: [/]Username and password not found in config file")
+    if "username" not in conf:
+        console.print("[bold red]ERROR: [/]Username not found in config file. Please run `cf config`.")
         return
 
-    client = CFClient(conf["username"], conf["password"])
+    client = CFClient(conf["username"])
     if not client.login():
         console.print("[bold red]ERROR: [/]Login failed")
         return

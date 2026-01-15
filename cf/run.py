@@ -21,9 +21,22 @@ def run_cmd(ext: str, file: str) -> Optional[Union[str, List[str]]]:
         console.print("[bold red]ERROR: [/]The file extension is not supported.\n")
 
 
+def get_available_problems(directory: str) -> list:
+    """Get list of available problem IDs from test files."""
+    problems = set()
+    for f in os.listdir(directory):
+        if f.endswith(".input.test"):
+            # Format: {problem}.{num}.input.test
+            parts = f.split(".")
+            if len(parts) >= 3:
+                problems.add(parts[0])
+    return sorted(problems)
+
+
 @click.command()
 @click.argument("file", required=True)
-def run(file: str):
+@click.option("-p", "--problem", default=None, help="Problem ID (e.g., a, b, c)")
+def run(file: str, problem: str):
     """
     Check the sample test cases for a problem.
     """
@@ -53,11 +66,31 @@ def run(file: str):
         console.print("[bold red]ERROR: [/]The file does not exist.\n")
         return
 
-    p_id = file.split(".")[0].lower()
-    p_ext = file.split(".")[-1]
+    # Get just the filename without path
+    filename = os.path.basename(file)
+    p_ext = filename.split(".")[-1]
 
-    all_inputs = sorted([f for f in os.listdir(current_dir) if f.endswith(".input.test") and f.startswith(p_id)])
-    all_outputs = sorted([f for f in os.listdir(current_dir) if f.endswith(".output.test") and f.startswith(p_id)])
+    # Determine problem ID
+    if problem:
+        p_id = problem.lower()
+    else:
+        # Try to get from filename (e.g., "a.py" -> "a")
+        p_id = filename.split(".")[0].lower()
+
+    available_problems = get_available_problems(current_dir)
+
+    # Check if p_id matches exactly one problem
+    if p_id not in available_problems:
+        if len(available_problems) == 0:
+            console.print("[bold red]ERROR: [/]No test cases found in this directory. Run `cf parse` first.\n")
+            return
+
+        console.print(f"[bold yellow]WARNING: [/]No test cases found for problem '{p_id}'.")
+        console.print(f"[bold blue]Available problems: [/]{', '.join(available_problems)}\n")
+        p_id = click.prompt("Enter problem ID", type=click.Choice(available_problems, case_sensitive=False)).lower()
+
+    all_inputs = sorted([f for f in os.listdir(current_dir) if f.endswith(".input.test") and f.split(".")[0] == p_id])
+    all_outputs = sorted([f for f in os.listdir(current_dir) if f.endswith(".output.test") and f.split(".")[0] == p_id])
 
     total_passed = 0
 
