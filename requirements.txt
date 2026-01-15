@@ -1,5 +1,0 @@
-click
-rich
-beautifulsoup4
-requests
-websocket-client

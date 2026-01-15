@@ -12,23 +12,17 @@ $ pip install -U codeforces
 $ cf --help
 ```
 
-#### 2. Install from source
+#### 2. Install from source (using uv)
 - Clone the repo
 ```
 $ git clone https://github.com/Nirlep5252/codeforces-cli
 ```
 
-- Install it
+- Install with uv
 ```
 $ cd ./codeforces-cli
-$ python3 -m pip install build
-$ python3 -m build
-$ python3 -m pip install dist/codeforces-0.0.1-py3-none-any.whl --force-reinstall
-```
-
-- Happy coding!
-```
-$ cf --help
+$ uv sync
+$ uv run cf --help
 ```
 
 #### Current commands:
