@@ -22,6 +22,8 @@ $ uv run cf --help
 
 **Note:** Chrome browser is required for authentication.
 
+Python 3.9 through 3.14 are supported. Newer versions probably work but are untested, and the CLI warns you when it sees one.
+
 #### Authentication Note
 
 Due to Cloudflare protection on Codeforces, authentication requires opening a browser window once. When you run `cf config` or first use `cf submit`, a browser will open for you to login. After successful login, your session is saved and subsequent commands will work without opening the browser again (until the session expires).

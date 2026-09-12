@@ -17,7 +17,7 @@ def config(username: str, cf_dir: str):
 
     client = CFClient(username)
     if not client.login():
-        console.print("[bold red]ERROR: [/]Login failed.")
+        # login() already printed why it failed.
         return
 
     if cf_dir.startswith("~"):

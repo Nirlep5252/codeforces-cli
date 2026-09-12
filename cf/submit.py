@@ -74,7 +74,7 @@ def submit(file: str):
 
     clnt = CFClient(data['username'])
     if not clnt.login():
-        console.print("[bold red]ERROR: [/]Unable to login")
+        # login() already printed why it failed.
         return
 
     url = f"https://codeforces.com/contest/{c_id}/submit"

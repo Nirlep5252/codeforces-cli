@@ -20,7 +20,7 @@ def unsolved():
 
     client = CFClient(conf["username"])
     if not client.login():
-        console.print("[bold red]ERROR: [/]Login failed")
+        # login() already printed why it failed.
         return
 
     ps = client.session.get("https://codeforces.com/problemset")

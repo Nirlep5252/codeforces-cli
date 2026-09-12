@@ -1,3 +1,42 @@
+import sys
+
+# Oldest Python we support, and the newest release this was tested against.
+MIN_PYTHON = (3, 9)
+LATEST_TESTED_PYTHON = (3, 14)
+
+
+def _check_python_version() -> None:
+    """
+    Fail loudly on Python versions we do not support, and warn on untested ones.
+
+    Uses plain print instead of rich: this runs before any third party import,
+    because an unsupported interpreter usually breaks those imports first.
+    """
+    current = ".".join(str(v) for v in sys.version_info[:3])
+
+    if sys.version_info < MIN_PYTHON:
+        minimum = ".".join(str(v) for v in MIN_PYTHON)
+        print(
+            f"ERROR: codeforces-cli needs Python {minimum} or newer, "
+            f"but this is Python {current} ({sys.executable}).\n"
+            f"Install it under a newer interpreter, for example:\n"
+            f"  pipx install --python python3.13 codeforces",
+            file=sys.stderr,
+        )
+        raise SystemExit(1)
+
+    if sys.version_info[:2] > LATEST_TESTED_PYTHON:
+        latest = ".".join(str(v) for v in LATEST_TESTED_PYTHON)
+        print(
+            f"WARNING: Python {current} is newer than the latest version "
+            f"codeforces-cli was tested on ({latest}). "
+            f"If something breaks, please open an issue.",
+            file=sys.stderr,
+        )
+
+
+_check_python_version()
+
 import click
 from .config import config
 from .contests import contests

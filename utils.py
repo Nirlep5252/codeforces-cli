@@ -1,9 +1,93 @@
 import os
 import json
+import re
+import sys
+import types
 import requests
 from bs4 import BeautifulSoup
 from typing import Optional
 from rich.console import Console
+
+
+def _ensure_distutils_version() -> None:
+    """
+    Register a minimal `distutils.version` module when the stdlib one is gone.
+
+    `undetected_chromedriver.patcher` does `from distutils.version import
+    LooseVersion`, and distutils was removed from the stdlib in Python 3.12.
+    Having setuptools installed also papers over this, but it is not a
+    dependency of undetected-chromedriver, so ship our own shim instead.
+    """
+    try:
+        import distutils.version  # noqa: F401
+        return
+    except ImportError:
+        pass
+
+    class LooseVersion:
+        """Port of the distutils class, only what the patcher actually uses."""
+
+        component_re = re.compile(r"(\d+ | [a-z]+ | \.)", re.VERBOSE)
+
+        def __init__(self, vstring: Optional[str] = None):
+            self.vstring = ""
+            self.version = []
+            if vstring:
+                self.parse(vstring)
+
+        def parse(self, vstring: str) -> None:
+            self.vstring = vstring
+            components = [c for c in self.component_re.split(vstring) if c and c != "."]
+            for i, component in enumerate(components):
+                try:
+                    components[i] = int(component)
+                except ValueError:
+                    pass
+            self.version = components
+
+        def __str__(self):
+            return self.vstring
+
+        def __repr__(self):
+            return "LooseVersion ('%s')" % str(self)
+
+        def _key(self, other):
+            if isinstance(other, str):
+                return LooseVersion(other).version
+            if isinstance(other, LooseVersion):
+                return other.version
+            return None
+
+        def __eq__(self, other):
+            key = self._key(other)
+            return NotImplemented if key is None else self.version == key
+
+        def __lt__(self, other):
+            key = self._key(other)
+            return NotImplemented if key is None else self.version < key
+
+        def __le__(self, other):
+            key = self._key(other)
+            return NotImplemented if key is None else self.version <= key
+
+        def __gt__(self, other):
+            key = self._key(other)
+            return NotImplemented if key is None else self.version > key
+
+        def __ge__(self, other):
+            key = self._key(other)
+            return NotImplemented if key is None else self.version >= key
+
+    distutils = sys.modules.get("distutils")
+    if distutils is None:
+        distutils = types.ModuleType("distutils")
+        distutils.__path__ = []  # type: ignore[attr-defined]
+        sys.modules["distutils"] = distutils
+
+    version_module = types.ModuleType("distutils.version")
+    version_module.LooseVersion = LooseVersion  # type: ignore[attr-defined]
+    sys.modules["distutils.version"] = version_module
+    distutils.version = version_module  # type: ignore[attr-defined]
 
 
 def get_config(console: Console) -> Optional[dict]:
@@ -51,9 +135,14 @@ class CFClient:
 
         # Need to open browser for login
         try:
+            _ensure_distutils_version()
             import undetected_chromedriver as uc
-        except ImportError:
-            self.console.print("[bold red]ERROR:[/] undetected-chromedriver not installed. Run: uv add undetected-chromedriver")
+        except ImportError as e:
+            if getattr(e, "name", None) == "undetected_chromedriver":
+                self.console.print("[bold red]ERROR:[/] undetected-chromedriver is not installed. Run: pip install undetected-chromedriver")
+            else:
+                self.console.print("[bold red]ERROR:[/] undetected-chromedriver is installed but could not be imported.")
+                self.console.print(f"[dim]Details: {e.__class__.__name__}: {e}[/]")
             return False
 
         self.console.print("\n[bold cyan]Opening browser for login...[/]")

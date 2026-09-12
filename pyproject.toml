@@ -1,6 +1,6 @@
 [project]
 name = "codeforces"
-version = "0.1.1"
+version = "0.1.2"
 description = "A simple command line tool to move your competitive programming workflow to your terminal."
 readme = "README.md"
 license = "MIT"
@@ -8,6 +8,12 @@ authors = [{ name = "Nirlep5252" }]
 keywords = ["codeforces", "competitive programming", "cli", "terminal"]
 classifiers = [
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "License :: OSI Approved :: MIT License",
 ]
 requires-python = ">=3.9"
