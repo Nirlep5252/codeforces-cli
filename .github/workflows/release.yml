@@ -13,8 +13,9 @@ jobs:
       # Required for PyPI trusted publishing. No API token is stored anywhere.
       id-token: write
     steps:
-      - uses: actions/checkout@v7
-      - uses: astral-sh/setup-uv@v10
+      # setup-uv has no moving major tag, so both actions are pinned exactly.
+      - uses: actions/checkout@v7.0.1
+      - uses: astral-sh/setup-uv@v10.1.0
       - name: Check the tag matches the version in pyproject.toml
         run: |
           tag="${GITHUB_REF_NAME#v}"
